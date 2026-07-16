@@ -55,7 +55,9 @@ class ConditionalLogic:
         if (
             state["investment_debate_state"]["count"] >= 2 * self.max_debate_rounds
         ):  # 3 rounds of back-and-forth between 2 agents
-            return "Research Manager"
+            # feat/fx-researcher: the FX Macro Researcher speaks once after the
+            # bull/bear debate concludes, before the Research Manager adjudicates.
+            return "FX Macro Researcher"
         if state["investment_debate_state"]["current_response"].startswith("Bull"):
             return "Bear Researcher"
         return "Bull Researcher"

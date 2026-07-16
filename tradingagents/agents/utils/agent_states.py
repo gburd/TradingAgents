@@ -12,6 +12,9 @@ class InvestDebateState(TypedDict):
     bear_history: Annotated[
         str, "Bearish Conversation history"
     ]  # Bullish Conversation history
+    fx_history: Annotated[
+        str, "FX Macro Researcher history"
+    ]  # feat/fx-researcher: currency/rates voice
     history: Annotated[str, "Conversation history"]  # Conversation history
     current_response: Annotated[str, "Latest response"]  # Last response
     judge_decision: Annotated[str, "Final judge decision"]  # Last response
