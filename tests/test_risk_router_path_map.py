@@ -78,4 +78,8 @@ def test_debate_path_map_covers_full_router_range():
         for c in (0, 99)
     }
     assert returns <= set(DEBATE_PATH_MAP)
-    assert "Research Manager" in returns  # terminal reachable
+    # feat/fx-researcher: the debate router's terminal is now the FX Macro
+    # Researcher (which then edges statically to the Research Manager), so the
+    # reachable terminal from the router is "FX Macro Researcher".
+    assert "FX Macro Researcher" in returns  # terminal reachable
+    assert "Research Manager" in DEBATE_PATH_MAP  # still a valid path-map target

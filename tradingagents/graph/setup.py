@@ -12,6 +12,7 @@ from tradingagents.agents import (
     create_bull_researcher,
     create_conservative_debator,
     create_fundamentals_analyst,
+    create_fx_researcher,
     create_market_analyst,
     create_neutral_debator,
     create_news_analyst,
@@ -35,6 +36,9 @@ logger = logging.getLogger(__name__)
 DEBATE_PATH_MAP = {
     "Bull Researcher": "Bull Researcher",
     "Bear Researcher": "Bear Researcher",
+    # feat/fx-researcher: after bull/bear rounds conclude, the FX Macro Researcher
+    # speaks once before the Research Manager adjudicates.
+    "FX Macro Researcher": "FX Macro Researcher",
     "Research Manager": "Research Manager",
 }
 RISK_ANALYSIS_PATH_MAP = {
@@ -131,6 +135,8 @@ class GraphSetup:
 
         bull_researcher_node = create_bull_researcher(self.quick_thinking_llm)
         bear_researcher_node = create_bear_researcher(self.quick_thinking_llm)
+        # feat/fx-researcher: FX macro voice; quick tier (adversarial/analyst role).
+        fx_researcher_node = create_fx_researcher(self.quick_thinking_llm)
         research_manager_node = create_research_manager(self.deep_thinking_llm)
         trader_node = create_trader(self.quick_thinking_llm)
 
@@ -147,6 +153,7 @@ class GraphSetup:
 
         workflow.add_node("Bull Researcher", bull_researcher_node)
         workflow.add_node("Bear Researcher", bear_researcher_node)
+        workflow.add_node("FX Macro Researcher", fx_researcher_node)
         workflow.add_node("Research Manager", research_manager_node)
         workflow.add_node("Trader", trader_node)
         workflow.add_node("Aggressive Analyst", aggressive_analyst)
@@ -172,6 +179,9 @@ class GraphSetup:
                 self.conditional_logic.should_continue_debate,
                 DEBATE_PATH_MAP,
             )
+        # feat/fx-researcher: the FX voice speaks once after the bull/bear rounds,
+        # then hands to the Research Manager to adjudicate all three.
+        workflow.add_edge("FX Macro Researcher", "Research Manager")
         workflow.add_edge("Research Manager", "Trader")
         workflow.add_edge("Trader", "Aggressive Analyst")
         # All three risk edges share the complete RISK_ANALYSIS_PATH_MAP (#1088).

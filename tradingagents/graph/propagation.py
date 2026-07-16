@@ -40,6 +40,7 @@ class Propagator:
                 {
                     "bull_history": "",
                     "bear_history": "",
+                    "fx_history": "",
                     "history": "",
                     "current_response": "",
                     "count": 0,
